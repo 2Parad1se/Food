@@ -96,7 +96,7 @@ window.addEventListener("DOMContentLoaded", () => {
     modalOpen.forEach(item => {
         item.addEventListener("click", (e) => {
             e.preventDefault();
-            openModal(); //отменяет прокрутку страницы
+            openModal(); 
         });
     });
 
@@ -113,18 +113,16 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("keydown", (e) => {
-        e.preventDefault();
-        if (e.code === "Escape") {
+        if (e.code === "Escape") { //отслеживает нажатие клавиатуры, если Esc закрывает модальное окно
             closeModal();
-            
         }
-        console.log(e.code);
     });
 
     function openModal(){
         modalWindow.classList.remove("hide");
         modalWindow.classList.add("show");
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden"; //отменяет прокрутку страницы
+        clearInterval(modalTimerID);
     }
 
     function closeModal(){
@@ -133,5 +131,17 @@ window.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = "";
     }
 
-});
+    //modification modal window
 
+    const modalTimerID = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+            openModal();
+            window.removeEventListener("scroll", showModalByScroll); //удаляем обработчик, если он уже срабатывал
+        }
+        
+    }
+
+    window.addEventListener("scroll", showModalByScroll);
+});
