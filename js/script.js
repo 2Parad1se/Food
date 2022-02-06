@@ -1,5 +1,7 @@
 "use strict";
 
+//tabs 038
+
 window.addEventListener("DOMContentLoaded", () => {
     const tabHeaderItems = document.querySelectorAll(".tabheader__item");
     const parentTabHeaderItem = document.querySelector(".tabheader__items");
@@ -35,7 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
     hideContent();
     showContent();
 
-    //Timer
+    //Timer 041
 
     const deadline = "2022-02-07";
     
@@ -73,8 +75,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (getTimer.total <= 0){
             clearInterval(endID);
         }
-        // console.log(daysClock, hoursClock, minutesClock, secondClock);
-        // console.log(getTime().total);
+
     }
 
     function getZero(par){
@@ -84,8 +85,53 @@ window.addEventListener("DOMContentLoaded", () => {
             return par;
         }
     }
-    // console.log(getTime());
+    
     const endID = setInterval(setClock, 1000);
+
+    //Modal window
+    const modalOpen = document.querySelectorAll(".open_modal");
+    const modalClose = document.querySelector(".modal__close");
+    const modalWindow = document.querySelector(".modal");
+
+    modalOpen.forEach(item => {
+        item.addEventListener("click", (e) => {
+            e.preventDefault();
+            openModal(); //отменяет прокрутку страницы
+        });
+    });
+
+    modalClose.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeModal();
+    });
+
+    modalWindow.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (e.target == modalWindow) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", (e) => {
+        e.preventDefault();
+        if (e.code === "Escape") {
+            closeModal();
+            
+        }
+        console.log(e.code);
+    });
+
+    function openModal(){
+        modalWindow.classList.remove("hide");
+        modalWindow.classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+        modalWindow.classList.remove("show");
+        modalWindow.classList.add("hide");
+        document.body.style.overflow = "";
+    }
+
 });
 
-console.log(Date.parse("2022-02-05")); // количество миллисекунд с 1970 до даты
