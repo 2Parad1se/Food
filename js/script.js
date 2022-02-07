@@ -18,9 +18,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
             });
             e.target.classList.add("tabheader__item_active");
-            
+
         }
     });
+
     function hideContent() {
         content.forEach(item => {
             item.classList.add("hide");
@@ -28,10 +29,11 @@ window.addEventListener("DOMContentLoaded", () => {
         });
 
     }
+
     function showContent(i = 0) {
         content[i].classList.remove("hide");
         content[i].classList.add("show", "fade");
- 
+
     }
 
     hideContent();
@@ -40,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     //Timer 041
 
     const deadline = "2022-02-07";
-    
+
 
     function getTime() {
         let total = Date.parse(deadline) - Date.parse(new Date());
@@ -49,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
         let minutes = Math.floor(total / (1000 * 60) % 60);
         let seconds = Math.floor((total / 1000) % 60);
         // console.log(days, hours, minutes, seconds);
-        
+
         return {
             "total": total,
             "days": days,
@@ -61,7 +63,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setClock(); //чтобы не было задержки 1с перед первым вызовом
 
     function setClock() {
-        
+
 
         const daysClock = document.querySelector("#days");
         const hoursClock = document.querySelector("#hours");
@@ -72,20 +74,20 @@ window.addEventListener("DOMContentLoaded", () => {
         hoursClock.textContent = getZero(getTimer.hours);
         minutesClock.textContent = getZero(getTimer.minutes);
         secondClock.textContent = getZero(getTimer.seconds);
-        if (getTimer.total <= 0){
-            clearInterval(endID);
+        if (getTimer.total <= 0) {
+            // clearInterval(endID);
         }
 
     }
 
-    function getZero(par){
+    function getZero(par) {
         if (par >= 0 && par < 10) {
             return `0${par}`;
         } else {
             return par;
         }
     }
-    
+
     const endID = setInterval(setClock, 1000);
 
     //Modal window
@@ -96,7 +98,7 @@ window.addEventListener("DOMContentLoaded", () => {
     modalOpen.forEach(item => {
         item.addEventListener("click", (e) => {
             e.preventDefault();
-            openModal(); 
+            openModal();
         });
     });
 
@@ -118,14 +120,14 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    function openModal(){
+    function openModal() {
         modalWindow.classList.remove("hide");
         modalWindow.classList.add("show");
         document.body.style.overflow = "hidden"; //отменяет прокрутку страницы
-        clearInterval(modalTimerID);
+        // clearInterval(modalTimerID);
     }
 
-    function closeModal(){
+    function closeModal() {
         modalWindow.classList.remove("show");
         modalWindow.classList.add("hide");
         document.body.style.overflow = "";
@@ -133,15 +135,85 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //modification modal window
 
-    const modalTimerID = setTimeout(openModal, 5000);
+    // const modalTimerID = setTimeout(openModal, 5000);
 
-    function showModalByScroll() {
-        if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
-            openModal();
-            window.removeEventListener("scroll", showModalByScroll); //удаляем обработчик, если он уже срабатывал
+    // function showModalByScroll() {
+    //     if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+    //         openModal();
+    //         window.removeEventListener("scroll", showModalByScroll); //удаляем обработчик, если он уже срабатывал
+    //     }
+
+    // }
+
+    // window.addEventListener("scroll", showModalByScroll);
+
+    //add Class 048
+    class MenuCard {
+        constructor (src, alt, title, text, price, ...classes) {
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.text = text;
+            this.price = price;
+            this.exchangeRates = 79;
+            this.classes = classes;
+            this.convertToRubles();
         }
-        
+
+        convertToRubles() {
+            this.price = this.price * this.exchangeRates;
+        }
+
+        render() {
+            const container = document.querySelector(".container_menu");
+            const element = document.createElement("div");
+            element.innerHTML = `
+                <img src=${this.src} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.text}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                <div class="menu__item-cost">Цена:</div>
+                <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
+            `;
+            if (this.classes.length == 0) {
+                this.classes.push("menu__item");
+            } 
+            this.classes.forEach(item => {
+                element.classList.add(item);
+            });
+            container.append(element);
+        }
     }
 
-    window.addEventListener("scroll", showModalByScroll);
+    new MenuCard(
+        "img/tabs/vegy.jpg",
+        "vegy",
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        70,
+        "menu__item",
+        "123",
+        "312",
+    ).render();
+
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        100,
+        "menu__item",
+    ).render();
+
+    new MenuCard(
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+        55,
+        
+    ).render();
+    
+    //0, 0, 0, 0, 135
 });
