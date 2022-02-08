@@ -98,7 +98,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //Modal window
     const modalOpen = document.querySelectorAll(".open_modal");
-    const modalClose = document.querySelector(".modal__close");
     const modalWindow = document.querySelector(".modal");
 
     modalOpen.forEach(item => {
@@ -107,12 +106,8 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    modalClose.addEventListener("click", (e) => {
-        closeModal();
-    });
-
     modalWindow.addEventListener("click", (e) => {
-        if (e.target == modalWindow) {
+        if (e.target == modalWindow || e.target.classList.contains("modal__close")) {
             closeModal();
         }
     });
@@ -222,47 +217,77 @@ window.addEventListener("DOMContentLoaded", () => {
     const forms = document.querySelectorAll("form");
 
     const message = {
-        'loading': "Идет загрузка...",
+        'loading': "icons/spinner.svg",
         'succes': "Мы с вами свяжемся",
         'error': "Ошибка...",
     };
 
-    forms.forEach(item => {
-        item.addEventListener("submit", (e) => {
+    forms.forEach(form => {
+        form.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            const div = document.createElement('div');
-            item.append(div);
+            const spinner = document.createElement("img");
+            spinner.src = message.loading;
+            spinner.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            // form.append(spinner);
+            form.insertAdjacentElement('afterend', spinner); //вставляем после формы, чтобы верстка не ехала
+
             const request = new XMLHttpRequest();
             request.open("POST", "server.php");
             request.setRequestHeader("Content-type", "application/json");
-            const data = new FormData(item); //специфический обьект, который собирает все данные с формы
+            const data = new FormData(form); //специфический обьект, который собирает все данные с формы
             
             //для отправки данных на сервер в формате json 
             const obj = {};
-            data.forEach((item, i) => {
-                console.log(item, i, arr);  //qweqweq name FormData {}, 12312321 phone FormData {}
-                obj[i] = item;
+            data.forEach((value, key) => {
+                // console.log(value, key);  //qweqweq name FormData {}, 12312321 phone FormData {}
+                obj[key] = value;
             });
             const json = JSON.stringify(obj);
 
             request.send(json);
-            div.textContent = message.loading;
+
 
             request.addEventListener("load", () =>{
                 if (request.status === 200) {
                     console.log(request.response);
-                    div.textContent = message.succes;
-                    item.reset();
-                    setTimeout(() => {
-                        div.remove();
-                    }, 2000);
+                    showNewModal(message.succes);
+                    
                 } else {
-                    div.textContent = message.error;
+                    showNewModal(message.error);
                 }
+                form.reset();
+                spinner.remove();
             });
         });
     });
     
+    //request modifier 054
+    function showNewModal(message) {
+        const modalDialog = document.querySelector(".modal__dialog");
+        const prevModalContent = document.querySelector('.modal__content');
+        const newModalContent = document.createElement("div");
+        
+        prevModalContent.classList.add("hide");
+
+        newModalContent.innerHTML = `
+        <div class="modal__content">
+        <div class="modal__close">&times;</div>
+            <p>${message}</p>
+        </div>
+        `;
+        openModal();
+
+        modalDialog.append(newModalContent);
+        setTimeout(() => {
+            newModalContent.remove();
+            prevModalContent.classList.remove('hide');
+            closeModal();
+        }, 3000);
+
+    }
 
 });
