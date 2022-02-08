@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //Timer 041
 
-    const deadline = "2022-02-07";
+    const deadline = "2022-02-09";
 
 
     function getTime() {
@@ -60,6 +60,7 @@ window.addEventListener("DOMContentLoaded", () => {
             "seconds": seconds,
         };
     }
+    const endID = setInterval(setClock, 1000);
     setClock(); //чтобы не было задержки 1с перед первым вызовом
 
     function setClock() {
@@ -70,12 +71,17 @@ window.addEventListener("DOMContentLoaded", () => {
         const minutesClock = document.querySelector("#minutes");
         const secondClock = document.querySelector("#seconds");
         let getTimer = getTime();
-        daysClock.textContent = getZero(getTimer.days);
-        hoursClock.textContent = getZero(getTimer.hours);
-        minutesClock.textContent = getZero(getTimer.minutes);
-        secondClock.textContent = getZero(getTimer.seconds);
         if (getTimer.total <= 0) {
-            // clearInterval(endID);
+            clearInterval(endID);
+            daysClock.textContent = "00";
+            hoursClock.textContent = "00";
+            minutesClock.textContent = "00";
+            secondClock.textContent = "00";
+        } else {
+            daysClock.textContent = getZero(getTimer.days);
+            hoursClock.textContent = getZero(getTimer.hours);
+            minutesClock.textContent = getZero(getTimer.minutes);
+            secondClock.textContent = getZero(getTimer.seconds);
         }
 
     }
@@ -88,7 +94,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const endID = setInterval(setClock, 1000);
+    
 
     //Modal window
     const modalOpen = document.querySelectorAll(".open_modal");
@@ -97,18 +103,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
     modalOpen.forEach(item => {
         item.addEventListener("click", (e) => {
-            e.preventDefault();
             openModal();
         });
     });
 
     modalClose.addEventListener("click", (e) => {
-        e.preventDefault();
         closeModal();
     });
 
     modalWindow.addEventListener("click", (e) => {
-        e.preventDefault();
         if (e.target == modalWindow) {
             closeModal();
         }
@@ -137,13 +140,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // const modalTimerID = setTimeout(openModal, 5000);
 
-    // function showModalByScroll() {
-    //     if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
-    //         openModal();
-    //         window.removeEventListener("scroll", showModalByScroll); //удаляем обработчик, если он уже срабатывал
-    //     }
+    function showModalByScroll() {
+        if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+            openModal();
+            window.removeEventListener("scroll", showModalByScroll); //удаляем обработчик, если он уже срабатывал
+        }
 
-    // }
+    }
 
     // window.addEventListener("scroll", showModalByScroll);
 
@@ -214,6 +217,52 @@ window.addEventListener("DOMContentLoaded", () => {
         55,
         
     ).render();
+
+    //add request
+    const forms = document.querySelectorAll("form");
+
+    const message = {
+        'loading': "Идет загрузка...",
+        'succes': "Мы с вами свяжемся",
+        'error': "Ошибка...",
+    };
+
+    forms.forEach(item => {
+        item.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const div = document.createElement('div');
+            item.append(div);
+            const request = new XMLHttpRequest();
+            request.open("POST", "server.php");
+            request.setRequestHeader("Content-type", "application/json");
+            const data = new FormData(item); //специфический обьект, который собирает все данные с формы
+            
+            //для отправки данных на сервер в формате json 
+            const obj = {};
+            data.forEach((item, i) => {
+                console.log(item, i, arr);  //qweqweq name FormData {}, 12312321 phone FormData {}
+                obj[i] = item;
+            });
+            const json = JSON.stringify(obj);
+
+            request.send(json);
+            div.textContent = message.loading;
+
+            request.addEventListener("load", () =>{
+                if (request.status === 200) {
+                    console.log(request.response);
+                    div.textContent = message.succes;
+                    item.reset();
+                    setTimeout(() => {
+                        div.remove();
+                    }, 2000);
+                } else {
+                    div.textContent = message.error;
+                }
+            });
+        });
+    });
     
-    //0, 0, 0, 0, 135
+
 });
