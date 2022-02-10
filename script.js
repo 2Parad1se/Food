@@ -232,15 +232,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 display: block;
                 margin: 0 auto;
             `;
-            // form.append(spinner);
-            form.insertAdjacentElement('afterend', spinner); //вставляем после формы, чтобы верстка не ехала
-
-            const request = new XMLHttpRequest();
-            request.open("POST", "server.php");
-            request.setRequestHeader("Content-type", "application/json");
-            const data = new FormData(form); //специфический обьект, который собирает все данные с формы
             
-            //для отправки данных на сервер в формате json 
+            form.insertAdjacentElement('afterend', spinner); //вставляем после формы, чтобы верстка не ехала
+            const data = new FormData(form);  //специфический обьект, который собирает все данные с формы
+
             const obj = {};
             data.forEach((value, key) => {
                 // console.log(value, key);  //qweqweq name FormData {}, 12312321 phone FormData {}
@@ -248,20 +243,24 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             const json = JSON.stringify(obj);
 
-            request.send(json);
-
-
-            request.addEventListener("load", () =>{
-                if (request.status === 200) {
-                    console.log(request.response);
-                    showNewModal(message.succes);
-                    
-                } else {
-                    showNewModal(message.error);
-                }
+            fetch('server.php', {
+                method: 'POST',
+                body: json,
+                headers: {
+                    'Content-type': 'application/json',
+                },
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showNewModal(message.succes);
+            }).catch(() => {
+                showNewModal(message.error);
+            }).finally(() => {
                 form.reset();
                 spinner.remove();
             });
+
         });
     });
     
@@ -289,5 +288,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }, 3000);
 
     }
+
 
 });
