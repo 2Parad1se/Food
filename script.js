@@ -290,4 +290,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    fetch('http://localhost:3000/menu')
+    .then(response => response.json())
+    .then(data => console.log(data));
+    
 });
