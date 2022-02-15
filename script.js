@@ -338,49 +338,93 @@ window.addEventListener("DOMContentLoaded", () => {
     //slider 001
 
     const wrapperSlider = document.querySelector('.offer__slider-wrapper');
-    const sliders = document.querySelectorAll('.offer__slide');
+    const lineSlider = document.querySelector('.offer__slides');
+    const slides = document.querySelectorAll('.offer__slide');
     const controlArrows = document.querySelectorAll('.control__arrows');
     const currentSlide = document.querySelector('#current');
     const totalSlide = document.querySelector('#total');
-    let number = 0;
+    let numberSlide = 1;
+    let offset = 0;
+    const width = parseInt(window.getComputedStyle(wrapperSlider).width);
 
-    function getSlideNumber(par = 0) {
-        number += par;
-        if (number < 0) {
-            number = sliders.length - 1;
-        } else if (number > sliders.length - 1) {
-            number = 0;
+    lineSlider.style.width = 100 * slides.length + "%";
+
+    // console.log(width); //650px 0 650 1300 1950
+
+    function setNumberSlide(par = 0) {
+        numberSlide += par;
+        if (numberSlide == 0) {
+            numberSlide = slides.length;
+        } else if (numberSlide > slides.length) {
+            numberSlide = 1;
         }
-        currentSlide.textContent = getZero(number + 1);
-        totalSlide.textContent = getZero(sliders.length);
-        drawSlides(number);
+        currentSlide.textContent = getZero(numberSlide);
+        totalSlide.textContent = getZero(slides.length);
+    }
+    setNumberSlide();
+
+    function controlOffset(widthElem, numSlide) {
+        offset += widthElem;
+        if (offset < 0 ) {
+            offset = width * (slides.length - 1);
+        } else if (offset > width * (slides.length - 1)) {
+            offset = 0;
+        }
+        console.log(offset);
+        lineSlider.style.transform = `translateX(-${offset}px)`;
+        setNumberSlide(numSlide);
     }
 
-    getSlideNumber();
-    // setInterval(getSlideNumber, 3000, 1);
+    // setInterval(controlOffset, 3000, width, 1);
 
-    function drawSlides(num) {
-        sliders.forEach(slider => {
-            slider.classList.add('hide');
-            slider.classList.remove('show');
-            slider.classList.remove('fade');
-        });
-        sliders[num].classList.add('show');
-        sliders[num].classList.remove('hide');
-        sliders[num].classList.add('fade');
-    }
- 
     controlArrows.forEach(arrow => {
         arrow.addEventListener('click', (e) => {
             if (e.target.classList.contains('offer__slider-prev')) {
-                getSlideNumber(-1);
+                controlOffset(-width, -1);
             } else if (e.target.classList.contains('offer__slider-next')) {
-                getSlideNumber(1);
-            } else {
-                console.log("error");
+                controlOffset(width, 1);
             }
         });
     });
+
+    //my implementation 061
+    // function getSlideNumber(par = 0) {
+    //     number += par;
+    //     if (number < 0) {
+    //         number = sliders.length - 1;
+    //     } else if (number > sliders.length - 1) {
+    //         number = 0;
+    //     }
+    //     currentSlide.textContent = getZero(number + 1);
+    //     totalSlide.textContent = getZero(sliders.length);
+    //     drawSlides(number);
+    // }
+
+    // getSlideNumber();
+    // // setInterval(getSlideNumber, 3000, 1);
+
+    // function drawSlides(num) {
+    //     sliders.forEach(slider => {
+    //         slider.classList.add('hide');
+    //         slider.classList.remove('show');
+    //         slider.classList.remove('fade');
+    //     });
+    //     sliders[num].classList.add('show');
+    //     sliders[num].classList.remove('hide');
+    //     sliders[num].classList.add('fade');
+    // }
+ 
+    // controlArrows.forEach(arrow => {
+    //     arrow.addEventListener('click', (e) => {
+    //         if (e.target.classList.contains('offer__slider-prev')) {
+    //             getSlideNumber(-1);
+    //         } else if (e.target.classList.contains('offer__slider-next')) {
+    //             getSlideNumber(1);
+    //         } else {
+    //             console.log("error");
+    //         }
+    //     });
+    // });
 
 
 });
