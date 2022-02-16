@@ -1,6 +1,6 @@
 "use strict";
 
-//tabs 038
+// //tabs 038
 
 window.addEventListener("DOMContentLoaded", () => {
     const tabHeaderItems = document.querySelectorAll(".tabheader__item");
@@ -33,16 +33,13 @@ window.addEventListener("DOMContentLoaded", () => {
     function showContent(i = 0) {
         contents[i].classList.remove("hide");
         contents[i].classList.add("show", "fade");
-
     }
 
     hideContent();
     showContent();
 
     //Timer 041
-
     const deadline = "2022-02-21";
-
 
     function getTime() {
         let total = Date.parse(deadline) - Date.parse(new Date());
@@ -51,7 +48,6 @@ window.addEventListener("DOMContentLoaded", () => {
         let minutes = Math.floor(total / (1000 * 60) % 60);
         let seconds = Math.floor((total / 1000) % 60);
         // console.log(days, hours, minutes, seconds);
-
         return {
             "total": total,
             "days": days,
@@ -64,8 +60,6 @@ window.addEventListener("DOMContentLoaded", () => {
     setClock(); //чтобы не было задержки 1с перед первым вызовом
 
     function setClock() {
-
-
         const daysClock = document.querySelector("#days");
         const hoursClock = document.querySelector("#hours");
         const minutesClock = document.querySelector("#minutes");
@@ -83,9 +77,7 @@ window.addEventListener("DOMContentLoaded", () => {
             minutesClock.textContent = getZero(getTimer.minutes);
             secondClock.textContent = getZero(getTimer.seconds);
         }
-
     }
-
     function getZero(par) {
         if (par >= 0 && par < 10) {
             return `0${par}`;
@@ -132,9 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     //modification modal window
-
     // const modalTimerID = setTimeout(openModal, 5000);
-
     function showModalByScroll() {
         if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
             openModal();
@@ -142,7 +132,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
     }
-
     // window.addEventListener("scroll", showModalByScroll);
 
     //add Class 048
@@ -183,35 +172,6 @@ window.addEventListener("DOMContentLoaded", () => {
             container.append(element);
         }
     }
-
-    // new MenuCard(
-    //     "img/tabs/vegy.jpg",
-    //     "vegy",
-    //     'Меню "Фитнес"',
-    //     'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    //     70,
-    //     "menu__item",
-    //     "123",
-    //     "312",
-    // ).render();
-
-    // new MenuCard(
-    //     "img/tabs/elite.jpg",
-    //     "elite",
-    //     'Меню “Премиум”',
-    //     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-    //     100,
-    //     "menu__item",
-    // ).render();
-
-    // new MenuCard(
-    //     "img/tabs/post.jpg",
-    //     "post",
-    //     'Меню "Постное"',
-    //     'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-    //     55,
-        
-    // ).render();
 
     //add request
     const forms = document.querySelectorAll("form");
@@ -265,11 +225,6 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
     // .catch(console.log("Сработал кетч"));
-
-
-
-
-
 
     forms.forEach(form => {
         form.addEventListener("submit", (e) => {
@@ -348,15 +303,16 @@ window.addEventListener("DOMContentLoaded", () => {
     const width = parseInt(window.getComputedStyle(wrapperSlider).width);
     const dots = [];
 
+    lineSlider.style.width = 100 * slides.length + "%";
+
     //carousel point
     const indicator = document.createElement('ol');
     indicator.classList.add('carousel-indicators');
     slider.append(indicator);
 
-    for (let i = 1; i < slides.length + 1; i++) {
+    for (let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
         dot.classList.add('dot');
-        dot.setAttribute('data-slide-to', i);
         indicator.append(dot);
         dots.push(dot);
     }
@@ -370,12 +326,11 @@ window.addEventListener("DOMContentLoaded", () => {
     dotActive(1);
 
     dots.forEach((dot, i) => {
-        dot.addEventListener('click', (e) => {
+        dot.addEventListener('click', () => {
             showSlideClick(i);
         });
     });
 
-    lineSlider.style.width = 100 * slides.length + "%";
 
     function showSlideClick(i) {
         lineSlider.style.transform = `translateX(-${i * width}px)`;
@@ -420,5 +375,65 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    //calc
+    let gender = 'female';
+    let height = 0;
+    let weight = 0;
+    let age = 0;
+    let ratio = '1.375';
+    const calcResult = document.querySelector('.calculating__result span');  
+    const allInput = document.querySelectorAll('.calculating__choose_medium input');
+
+    allInput.forEach(input => {
+        input.addEventListener('input', () => {
+            height = document.querySelector('#height').value;
+            weight = document.querySelector('#weight').value;
+            age = document.querySelector('#age').value;
+            calcCalories(gender, height, weight, age, ratio);
+        });
+    });
+  
+    function getDataPassiveForm(id) {
+        const parent = document.querySelectorAll(`#${id} div`);
+        parent.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (e.target.getAttribute('data-gender')) {
+                    gender = e.target.getAttribute('data-gender');
+                } else {
+                    ratio = e.target.getAttribute('data-ratio');
+                }
+                parent.forEach(item => {
+                    item.classList.remove('calculating__choose-item_active');
+                });
+            e.target.classList.add('calculating__choose-item_active');
+            calcCalories(gender, height, weight, age, ratio);
+            console.log(gender, ratio);
+            });
+        });
+    }
+    getDataPassiveForm('gender');
+    getDataPassiveForm('selectActivity');
+
+    function calcCalories(gender, height, weight, age, ratio) {
+        if (gender && height && weight && age && ratio) {
+            if (gender == 'male') {
+                calcResult.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+                return;
+            } else {
+                calcResult.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+                return;
+            }
+        } else {
+            calcResult.textContent = '_____';
+            return;
+        }
+    }
+    calcCalories(gender, height, weight, age, ratio);
+
+
+
+    
+
 
 });

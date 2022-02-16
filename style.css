@@ -94,7 +94,13 @@
                         flex-direction:column;
                         align-items:flex-end                        
                     }
-                    .offer__slider-counter{display:flex;width:180px;align-items:center;font-size:24px;color:rgba(0,0,0,.5)}
+                    .offer__slider-counter{
+                        display:flex;
+                        width:180px;
+                        align-items:center;
+                        font-size:24px;
+                        color:rgba(0,0,0,.5)
+                    }
                     .offer__slider-wrapper{
                         width:100%;
                         margin-top:15px;
