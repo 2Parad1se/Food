@@ -1,23 +1,32 @@
-function slider() {
-    //slider 001
-    const slider = document.querySelector('.offer__slider');
-    const wrapperSlider = document.querySelector('.offer__slider-wrapper');
-    const lineSlider = document.querySelector('.offer__slides');
-    const slides = document.querySelectorAll('.offer__slide');
-    const controlArrows = document.querySelectorAll('.control__arrows');
-    const currentSlide = document.querySelector('#current');
-    const totalSlide = document.querySelector('#total');
+'use strict';
+
+import { getZero } from "./timer";
+
+function slider({
+    controlArrowsSelector, 
+    currentSlideSelector, 
+    totalSlideSelector, 
+    wrapperSliderSelector, 
+    lineSlidesSelector, 
+    slidesSelector}) {
+    const controlArrows = document.querySelectorAll(controlArrowsSelector); //'.control__arrows'
+    const currentSlide = document.querySelector(currentSlideSelector); //'#current'
+    const totalSlide = document.querySelector(totalSlideSelector); //'#total'
+
+    const wrapperSlider = document.querySelector(wrapperSliderSelector); //'.offer__slider-wrapper'
+    const lineSlides = document.querySelector(lineSlidesSelector); //'.offer__slides'
+    const slides = document.querySelectorAll(slidesSelector); //'.offer__slide'
+
     let numberSlide = 1;
     let offset = 0;
     const width = parseInt(window.getComputedStyle(wrapperSlider).width);
     const dots = [];
-
-    lineSlider.style.width = 100 * slides.length + "%";
+    lineSlides.style.width = 100 * slides.length + "%";
 
     //carousel point
     const indicator = document.createElement('ol');
     indicator.classList.add('carousel-indicators');
-    slider.append(indicator);
+    wrapperSlider.append(indicator);
 
     for (let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
@@ -42,7 +51,7 @@ function slider() {
 
 
     function showSlideClick(i) {
-        lineSlider.style.transform = `translateX(-${i * width}px)`;
+        lineSlides.style.transform = `translateX(-${i * width}px)`;
         currentSlide.textContent = getZero(i + 1);
         totalSlide.textContent = getZero(slides.length);
         dotActive(i + 1);
@@ -69,11 +78,11 @@ function slider() {
             offset = 0;
         }
         console.log(offset);
-        lineSlider.style.transform = `translateX(-${offset}px)`;
+        lineSlides.style.transform = `translateX(-${offset}px)`;
         setNumberSlide(numSlide);
     }
 
-    // setInterval(controlOffset, 3000, width, 1);
+    setInterval(() => controlOffset(width, 1), 10000);
 
     controlArrows.forEach(arrow => {
         arrow.addEventListener('click', (e) => {
@@ -86,4 +95,4 @@ function slider() {
     });
 }
 
-module.exports = slider;
+export default slider;

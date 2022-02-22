@@ -1,5 +1,8 @@
+'use strict';
+
+import getData from "../services/getData";
+
 function cards() {
-    //add Class 048
     class MenuCard {
         constructor (src, alt, title, text, price, ...classes) {
             this.src = src;
@@ -38,16 +41,7 @@ function cards() {
         }
     }
 
-    async function getData(url) {
-        const response = await fetch(url);
-        // console.log(response.ok); // true (свойство показывает статус запроса)
-        // console.log(response.status); //200 (свойство показывает статус запроса, числовой эквивалент)
-        if (!response.ok) {
-            throw new Error(`Опачки, ошибка по адресу ${url}, код ошибки: ${response.status}`);
-        } //рукотворный обьект ошибки (который выскакивает в консоли)
 
-        return await response.json();
-    }
 
 
     getData('http://localhost:3000/menu')
@@ -65,4 +59,4 @@ function cards() {
     // .catch(console.log("Сработал кетч"));
 }
 
-module.exports = cards;
+export default cards;

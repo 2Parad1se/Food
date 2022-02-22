@@ -1,5 +1,6 @@
+'use strict';
+
 function calc() {
-    //calc
     let gender, height, weight, age, ratio;
     const calcResult = document.querySelector('.calculating__result span');  
     const allInput = document.querySelectorAll('.calculating__choose_medium input');
@@ -47,13 +48,6 @@ function calc() {
         });
         
     });
-    // function showErrorInput(input) { //Фокус не удался
-    //     if (input.value.match(/\D/ig)) {
-    //         input.classList.add('error_input');
-    //     } else {
-    //         input.classList.remove('error_input');
-    //     }
-    // }
 
     function getDataPassiveForm(id) {
         const parent = document.querySelectorAll(`#${id} div`);
@@ -96,4 +90,4 @@ function calc() {
     calcCalories(gender, height, weight, age, ratio);
 }
 
-module.exports = calc;
+export default calc;

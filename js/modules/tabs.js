@@ -1,19 +1,21 @@
-function tabs() {
-    const tabHeaderItems = document.querySelectorAll(".tabheader__item");
-    const parentTabHeaderItem = document.querySelector(".tabheader__items");
-    const contents = document.querySelectorAll(".tabcontent");
+'use strict';
 
-    parentTabHeaderItem.addEventListener("click", (e) => {
+function tabs(parentTabItemSelector, tabItemsSelector, contentsSelector, activeSelector) {
+    const parentTabItem = document.querySelector(parentTabItemSelector); //".tabheader__items"
+    const tabItems = document.querySelectorAll(tabItemsSelector); //".tabheader__item"
+    const contents = document.querySelectorAll(contentsSelector); //".tabcontent"
+
+    parentTabItem.addEventListener("click", (e) => {
         e.preventDefault();
-        if (e.target && e.target.matches("div.tabheader__item")) {
-            tabHeaderItems.forEach((item, i) => {
-                item.classList.remove("tabheader__item_active");
+        if (e.target && e.target.classList.contains(tabItemsSelector.slice(1))) { //"tabheader__item"
+            tabItems.forEach((item, i) => {
+                item.classList.remove(activeSelector); //"tabheader__item_active"
                 if (e.target == item) {
                     hideContent();
                     showContent(i);
                 }
             });
-            e.target.classList.add("tabheader__item_active");
+            e.target.classList.add(activeSelector); //"tabheader__item_active"
 
         }
     });
@@ -35,4 +37,4 @@ function tabs() {
     showContent();
 }
 
-module.exports = tabs;
+export default tabs;

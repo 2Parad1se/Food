@@ -1,6 +1,7 @@
-function timer() {
-    //Timer 041
-    const deadline = "2022-02-21";
+'use strict';
+
+function timer(timerSelector, deadline) {
+    // const deadline = "2022-02-28";
 
     function getTime() {
         let total = Date.parse(deadline) - Date.parse(new Date());
@@ -17,14 +18,15 @@ function timer() {
             "seconds": seconds,
         };
     }
-    const endID = setInterval(setClock, 1000);
-    setClock(); //чтобы не было задержки 1с перед первым вызовом
+    const endID = setInterval(() => setClock(timerSelector, deadline), 1000);
+    setClock(timerSelector, deadline); //чтобы не было задержки 1с перед первым вызовом
 
-    function setClock() {
-        const daysClock = document.querySelector("#days");
-        const hoursClock = document.querySelector("#hours");
-        const minutesClock = document.querySelector("#minutes");
-        const secondClock = document.querySelector("#seconds");
+    function setClock(timerSelector) {
+        const timer = document.querySelector(timerSelector);
+        const daysClock = timer.querySelector("#days");
+        const hoursClock = timer.querySelector("#hours");
+        const minutesClock = timer.querySelector("#minutes");
+        const secondClock = timer.querySelector("#seconds");
         let getTimer = getTime();
         if (getTimer.total <= 0) {
             clearInterval(endID);
@@ -39,13 +41,16 @@ function timer() {
             secondClock.textContent = getZero(getTimer.seconds);
         }
     }
-    function getZero(par) {
-        if (par >= 0 && par < 10) {
-            return `0${par}`;
-        } else {
-            return par;
-        }
+
+}
+
+function getZero(par) {
+    if (par >= 0 && par < 10) {
+        return `0${par}`;
+    } else {
+        return par;
     }
 }
 
-module.exports = timer;
+export default timer;
+export {getZero};

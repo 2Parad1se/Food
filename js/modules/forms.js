@@ -1,5 +1,9 @@
-function forms() {
-    //add request
+'use strict';
+
+import { openModal, closeModal } from "./modal";
+import postData from '../services/postData';
+
+function forms(modalTimerID) {
     const forms = document.querySelectorAll("form");
 
     const message = {
@@ -7,18 +11,6 @@ function forms() {
         'succes': "Мы с вами свяжемся",
         'error': "Ошибка...",
     };
-
-    async function postData(url, data) {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data,
-        });
-
-        return await response.json();
-    }
 
     forms.forEach(form => {
         form.addEventListener("submit", (e) => {
@@ -58,7 +50,6 @@ function forms() {
         });
     });
     
-    
     //request modifier 054
     function showNewModal(message) {
         const modalDialog = document.querySelector(".modal__dialog");
@@ -73,16 +64,16 @@ function forms() {
             <p>${message}</p>
         </div>
         `;
-        openModal();
+        openModal(".modal", modalTimerID);
 
         modalDialog.append(newModalContent);
         setTimeout(() => {
             newModalContent.remove();
             prevModalContent.classList.remove('hide');
-            closeModal();
+            closeModal(".modal");
         }, 3000);
 
     }
 }
 
-module.exports = forms;
+export default forms;
