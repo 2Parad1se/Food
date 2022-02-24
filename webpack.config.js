@@ -1,17 +1,34 @@
 'use strict';
 
-let path = require('path'); //техническая переменная. Не трогать
+let path = require('path');
 
-module.exports = { //обьект настроек
-  mode: 'development', //режим разработки // production режим работает медленне, но встроенны элементы для оптимизации кода
-  entry: './js/script.js', //точка старта (по умолчанию index.js) если надо несколько свойств, то как обьект (описание в документации)
-  output: { //файл выхода
-    filename: 'bundle.js', // как будет называться файл куда все поместится
-    path: __dirname + '/js' // путь до этого файла
+module.exports = {
+  mode: 'production',
+  entry: './js/script.js',
+  output: {
+    filename: 'bundle.js',
+    path: __dirname + '/js'
   },
-  watch: true, // вебпак будет отслеживать изменения и пересобирать проект после них
+  watch: true,
 
-  devtool: "source-map", //хранит информацию об исходниках (дает возможность их посмотреть или изменить)
+  devtool: "source-map",
 
-  module: {} //модули и их настройка также тут могут быть плагины
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['@babel/preset-env', {
+                debug: true,
+                corejs: 3,
+                useBuiltIns: "usage"
+            }]]
+          }
+        }
+      }
+    ]
+  }
 };
